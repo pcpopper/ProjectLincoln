@@ -7,7 +7,7 @@ using ProjectLincoln.Enums;
 namespace ProjectLincoln.Helpers.DB {
     public class Select {
 
-        private DatabaseType dbType = DatabaseType.MySql; // The type of databae
+        private DatabaseType dbType = DatabaseType.MySql; // The type of database
         private string table = ""; // The main table's name
         private Dictionary<string, string> aliases = null; // The alias' for the tables
         private Dictionary<string, List<string>> tableColumns = null; // The columns to show
@@ -69,7 +69,7 @@ namespace ProjectLincoln.Helpers.DB {
             // Set the database type
             this.dbType = dbType;
 
-            // create the chainable object
+            // create the chain-able object
             return this;
         }
 
@@ -120,7 +120,7 @@ namespace ProjectLincoln.Helpers.DB {
                 tableColumns.Add(getAlias(table, alias), columns);
             }
 
-            // create the chainable object
+            // create the chain-able object
             return this;
         }
 
@@ -138,7 +138,7 @@ namespace ProjectLincoln.Helpers.DB {
                 whereClauses.Add(string.Format("{0}", clause));
             }
 
-            // create the chainable object
+            // create the chain-able object
             return this;
         }
 
@@ -150,7 +150,7 @@ namespace ProjectLincoln.Helpers.DB {
         /// <param name="type">The join type</param>
         /// <returns>This class</returns>
         public Select where (string clause, List<int> ids, WhereType type = WhereType.AND) {
-            // Replace the question marks with the comma seperated ids
+            // Replace the question marks with the comma separated ids
             clause = clause.Replace("??", string.Join(", ", ids));
 
             // Return the where clause
@@ -175,7 +175,7 @@ namespace ProjectLincoln.Helpers.DB {
                     break;
             }
 
-            // Create the chainable object
+            // Create the chain-able object
             return this;
         }
 
@@ -188,7 +188,7 @@ namespace ProjectLincoln.Helpers.DB {
             // Add joined provided columns list to the columns array
             tableColumns.Add("none", columns);
 
-            // create the chainable object
+            // create the chain-able object
             return this;
         }
 
@@ -232,7 +232,7 @@ namespace ProjectLincoln.Helpers.DB {
         }
 
         /// <summary>
-        /// Prints out the propper querystring - minus the semi-colon
+        /// Prints out the proper querystring - minus the semi-colon
         /// </summary>
         /// <returns>The querystring minus the semi-colon</returns>
         public string ToInnerString () {

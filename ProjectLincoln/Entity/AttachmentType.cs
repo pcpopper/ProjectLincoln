@@ -24,7 +24,7 @@ namespace ProjectLincoln.Entity {
         /// <param name="tamcnId">Optional: The attachment type's tamcn</param>
         /// <param name="description">Optional: The attachment type's description</param>
         /// <param name="isPersonnel">Is this for a person?</param>
-        /// <param name="isTruck">Is this for for a truck?</param>
+        /// <param name="isTruck">Is this for a truck?</param>
         /// <param name="isWeapon">Is this for a weapon?</param>
         public AttachmentType (int? attachmentTypeId, int? tamcnId, string description, bool isPersonnel, bool isTruck, bool isWeapon) {
             this.AttachmentTypeId = attachmentTypeId;

@@ -9,6 +9,7 @@ using ProjectLincoln.Services;
 
 namespace ProjectLincoln {
     public partial class Splash : Form {
+
         // Flags that are used in the steps
         private bool hasConnection = false,
             loggedIn = false,
@@ -22,27 +23,31 @@ namespace ProjectLincoln {
         private int timeout = 60; // Stops after x seconds
         private int loginAttemptsAvailable = 3; // The number of allowed attempts before closing out
 
-        // Intagers used while starting up
+        // Integers used while starting up
         private int timeLeft = 0, step = -1, loginAttempts = 0;
 
         private SQLite localDb = new SQLite();
         private MySQL cloudDb = new MySQL();
         private List<string> loadingMessages = new List<string> () {
-                    "Testing internet connection.",
-                    "Loggin in.",
-                    "Initializing local data.",
-                    "Downloadng data for the first time.",
-                    "Setting up data locally",
-                    "Checking for updates.",
-                    "Updating data.",
-                    "Building Equipment.",
-                    "Gathering People.",
-                    "Loading Forms"
+                    "Testing internet connection.", // Step 0
+                    "Logging in.", // Step 1
+                    "Initializing local data.", // Step 2
+                    "Downloading data for the first time.", // Step 3
+                    "Installing the data locally", // Step 4
+                    "Checking for updates.", // Step 5
+                    "Updating data.", // Step 6
+                    "Building Equipment.", // Step 7
+                    "Gathering People.", // Step 8
+                    "Loading Forms" // Step 9
                 };
         private Dialogs.Login loginDialog = null;
 
         public Splash () {
             InitializeComponent();
+        }
+
+        public void updateLoadingMessage (string message) {
+            lblSpecifics.Text = message;
         }
 
         private void Splash_Load (object sender, EventArgs e) {
@@ -95,16 +100,19 @@ namespace ProjectLincoln {
                         case 0:
                             try {
                                 // Set the connection variables
+                                updateLoadingMessage("Setting up the ping");
                                 String host = "google.com";
                                 byte[] buffer = new byte[32];
                                 int timeout = 1000;
 
                                 // Ping the site
+                                updateLoadingMessage("Ping. Pong.");
                                 Ping myPing = new Ping();
                                 PingOptions pingOptions = new PingOptions();
                                 PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
 
                                 // Set isConnected to the connection status
+                                updateLoadingMessage("Checking ping reply");
                                 hasConnection = (reply.Status == IPStatus.Success);
                             } catch (Exception) {
                                 // Check if there is a login stored
@@ -143,6 +151,7 @@ namespace ProjectLincoln {
                             bool canceled = false;
 
                             // Create the login form
+                            updateLoadingMessage("Creating the login dialog");
                             loginDialog = new Dialogs.Login();
 
                             // Stop the timer to insure that the splash screen doesn't time out while waiting
@@ -151,11 +160,13 @@ namespace ProjectLincoln {
                             // Keep showing the dialog until one part fails
                             while (!loggedIn && loginAttempts < loginAttemptsAvailable) {
                                 // Show the login
+                                updateLoadingMessage("Showing the login dialog");
                                 if (loginDialog.ShowDialog() == DialogResult.OK) {
                                     // Check for a username in the application's settings
                                     if (!Settings.Default.Username.Equals("")) {
                                         #region Local
                                         // Check the username and password against the stored values
+                                        updateLoadingMessage("Checking username and password locally");
                                         if (loginDialog.Username.Equals(Settings.Default.Username) && 
                                             loginDialog.Password.Equals(Settings.Default.Password)) {
                                             // Set the logged in flag
@@ -173,6 +184,7 @@ namespace ProjectLincoln {
                                         #endregion
                                     } else {
                                         #region Cloud
+                                        updateLoadingMessage("Checking username and password remotely");
                                         // Set that this is the initial load
                                         initial = true;
 
@@ -226,6 +238,9 @@ namespace ProjectLincoln {
                         #endregion
                         #region Initializing Local DB
                         case 2:
+                            // Pass the reference to this form
+                            localDb.setSplash(this);
+
                             // Initialize the local db
                             localDb.createDatabase();
 
@@ -240,7 +255,7 @@ namespace ProjectLincoln {
                                 // Wait for the local db to become ready
                                 if (localDb.isCreated && initial) {
                                     // Get the data from the cloud
-                                    syncData = SyncService.getInitialSyncData();
+                                    syncData = SyncService.getInitialSyncData(this);
 
                                     // Check if there is any sync data
                                     if (syncData.Count == 0) {
@@ -261,7 +276,7 @@ namespace ProjectLincoln {
                                             tmr1.Start();
 
                                             // Retry to get the data from the cloud
-                                            syncData = SyncService.getInitialSyncData();
+                                            syncData = SyncService.getInitialSyncData(this);
 
                                             // Check if there is any sync data
                                             if (syncData.Count == 0) {
@@ -282,23 +297,17 @@ namespace ProjectLincoln {
                                             Application.Exit();
                                         }
                                     }
-
-                                    foreach (String item in syncData) {
-                                        listBox1.Items.Add(item);
-                                    }
-
-                                    tmr1.Stop();
                                 }
                             }
 
                             // Set the next flag
-                            //nextFlag = true;
+                            nextFlag = true;
                             break;
                         #endregion
                         #region Inserting data locally
                         case 4:
                             // Insert the data into the local db
-                            //localDb.syncData(syncData);
+                            localDb.syncData(syncData);
 
                             // Skip the next step
                             //step++;

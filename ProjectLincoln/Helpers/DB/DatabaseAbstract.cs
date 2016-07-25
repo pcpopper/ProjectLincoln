@@ -32,10 +32,16 @@ namespace ProjectLincoln.Helpers.DB {
                         Settings.Default.DBFile);
 
                     // Initialize the connection string
-                    connectionString = String.Format(
-                        "data source={0};Password={1};Version=3",
-                        dbPath,
-                        Settings.Default.DBPass);
+                    if (Settings.Default.DevMode) {
+                        connectionString = String.Format(
+                            "data source={0};Version=3",
+                            dbPath);
+                    } else {
+                        connectionString = String.Format(
+                             "data source={0};Password={1};Version=3",
+                             dbPath,
+                             Settings.Default.DBPass);
+                    }
                     break;
             }
         }

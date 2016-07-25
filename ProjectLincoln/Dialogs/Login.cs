@@ -35,7 +35,7 @@ namespace ProjectLincoln.Dialogs {
 
             // Use the error flag
             if (error) {
-                // Cancel the submiting event
+                // Cancel the submitting event
                 e.Cancel = true;
 
                 // Select the textbox
@@ -59,7 +59,7 @@ namespace ProjectLincoln.Dialogs {
 
             // Use the error flag
             if (error) {
-                // Cancel the submiting event
+                // Cancel the submitting event
                 e.Cancel = true;
 
                 // Select the textbox
