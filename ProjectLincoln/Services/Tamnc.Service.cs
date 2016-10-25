@@ -9,24 +9,75 @@ using ProjectLincoln.Helpers.DB;
 using ProjectLincoln.Properties;
 
 namespace ProjectLincoln.Services {
-    class TamncService : ServiceAbstract {
+    class TamcnService : ServiceAbstract {
 
         private List<Tamcn> tamcns = null;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public TamncService () {
+        public TamcnService () {
             tamcns = new List<Tamcn>();
+        }
+
+        /// <summary>
+        /// Static constructor and retrieval of a tamcn
+        /// </summary>
+        /// <param name="tamcn">The id of the record to retrieve</param>
+        /// <returns>New instance of this class</returns>
+        public static Tamcn retrieveTamcn (int tamcnId) {
+            //// Create a new instance of this class
+            //TamcnService tamcn = new TamcnService();
+
+            //// Prepare the db
+            //MySQL db = null;
+
+            //try {
+            //    #region Try
+            //    // Create the querystring
+            //    select = Select.create("Tamcn");
+
+            //    // Open the connection
+            //    db = MySQL.openConnection(select);
+
+            //    // Read the rows
+            //    MySqlDataReader reader = db.reader;
+            //    while (db.reader.Read()) {
+            //        tamcn.tamcns.Add(Tamcn.getFromDb(reader));
+            //    }
+
+            //    // Close the connection and reader
+            //    db.closeDB();
+            //    #endregion
+            //} catch (Exception ex) when (ex is FormatException) {
+            //    #region Catch
+            //    // Try to close the connection and reader
+            //    if (db != null) {
+            //        db.closeDB();
+            //    }
+
+            //    // Show the error message
+            //    if (Settings.Default.DevMode) {
+            //        Debug.WriteLine(
+            //            String.Format(
+            //                "An error has occurred: {0}\n{1}",
+            //                ex.Message,
+            //                ex.StackTrace));
+            //    }
+            //    #endregion
+            //}
+            Tamcn tamcn = new Tamcn(tamcnId, "D0023", "MRAP Cougar, 6X^", "MRAP CAT II", 9, true, false, false, false, "mrap 6x6.png");
+
+            return tamcn;
         }
 
         /// <summary>
         /// Static constructor and retrieval of all tamcns
         /// </summary>
         /// <returns>New instance of this class</returns>
-        public static TamncService retrieveTamcns () {
+        public static TamcnService retrieveTamcns () {
             // Create a new instance of this class
-            TamncService tamcn = new TamncService();
+            TamcnService tamcn = new TamcnService();
 
             // Prepare the db
             MySQL db = null;

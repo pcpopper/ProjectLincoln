@@ -10,7 +10,7 @@ namespace ProjectLincoln {
         static void Main () {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ProjectLincoln.Splash());
+            Application.Run(new ProjectLincoln.FormMain());
         }
     }
 }

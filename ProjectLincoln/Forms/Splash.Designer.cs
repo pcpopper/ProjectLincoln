@@ -23,14 +23,20 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent () {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Splash));
             this.lblLoading = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+<<<<<<< Updated upstream:ProjectLincoln/Splash.Designer.cs
             this.tmr1 = new System.Windows.Forms.Timer(this.components);
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+<<<<<<< Updated upstream:ProjectLincoln/Forms/Splash.Designer.cs
             this.lblSpecifics = new System.Windows.Forms.Label();
+=======
+=======
+            this.lblSpecifics = new System.Windows.Forms.Label();
+>>>>>>> Stashed changes:ProjectLincoln/Forms/Splash.Designer.cs
+>>>>>>> Stashed changes:ProjectLincoln/Splash.Designer.cs
             this.SuspendLayout();
             // 
             // lblLoading
@@ -54,6 +60,7 @@
             this.label2.TabIndex = 1;
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+<<<<<<< Updated upstream:ProjectLincoln/Splash.Designer.cs
             // tmr1
             // 
             this.tmr1.Interval = 500;
@@ -75,6 +82,16 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(576, 368);
             this.textBox1.TabIndex = 3;
+=======
+            // lblSpecifics
+            // 
+            this.lblSpecifics.BackColor = System.Drawing.Color.Transparent;
+            this.lblSpecifics.ForeColor = System.Drawing.Color.White;
+            this.lblSpecifics.Location = new System.Drawing.Point(97, 353);
+            this.lblSpecifics.Name = "lblSpecifics";
+            this.lblSpecifics.Size = new System.Drawing.Size(412, 18);
+            this.lblSpecifics.TabIndex = 4;
+>>>>>>> Stashed changes:ProjectLincoln/Forms/Splash.Designer.cs
             // 
             // lblSpecifics
             // 
@@ -92,11 +109,17 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(600, 390);
             this.ControlBox = false;
+<<<<<<< Updated upstream:ProjectLincoln/Forms/Splash.Designer.cs
             this.Controls.Add(this.lblSpecifics);
+=======
+<<<<<<< Updated upstream:ProjectLincoln/Splash.Designer.cs
+>>>>>>> Stashed changes:ProjectLincoln/Splash.Designer.cs
             this.Controls.Add(this.listBox1);
+=======
+            this.Controls.Add(this.lblSpecifics);
+>>>>>>> Stashed changes:ProjectLincoln/Forms/Splash.Designer.cs
             this.Controls.Add(this.lblLoading);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
             this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Splash";
@@ -106,7 +129,6 @@
             this.TransparencyKey = System.Drawing.Color.Magenta;
             this.Load += new System.EventHandler(this.Splash_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -114,9 +136,16 @@
 
         private System.Windows.Forms.Label lblLoading;
         private System.Windows.Forms.Label label2;
+<<<<<<< Updated upstream:ProjectLincoln/Splash.Designer.cs
         private System.Windows.Forms.Timer tmr1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox1;
+<<<<<<< Updated upstream:ProjectLincoln/Forms/Splash.Designer.cs
         private System.Windows.Forms.Label lblSpecifics;
+=======
+=======
+        private System.Windows.Forms.Label lblSpecifics;
+>>>>>>> Stashed changes:ProjectLincoln/Forms/Splash.Designer.cs
+>>>>>>> Stashed changes:ProjectLincoln/Splash.Designer.cs
     }
 }

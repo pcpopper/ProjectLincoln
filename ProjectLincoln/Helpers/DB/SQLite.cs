@@ -34,15 +34,28 @@ namespace ProjectLincoln.Helpers.DB {
         /// Method that runs the sql queries in order to create the database structure
         /// </summary>
         public void createDatabase () {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
             // Delete the db if in dev mode
             if (Settings.Default.DevMode) {
                 try {
                     System.IO.File.Delete(dbPath);
+<<<<<<< Updated upstream
                 } catch (Exception ex) {
+=======
+                } catch (Exception) {
+>>>>>>> Stashed changes
                     // Do nothing with the exception
                 }
             }
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             // Check if the db exists
             if (!System.IO.File.Exists(dbPath)) {
                 // Create the database file
@@ -59,6 +72,7 @@ namespace ProjectLincoln.Helpers.DB {
                     // Initialize the command object
                     using (comm = new SQLiteCommand(conn)) {
                         // Create the database structure if this is the first time
+<<<<<<< Updated upstream
                         if (!isCreated) {
 
                             #region Drop table statements
@@ -228,13 +242,298 @@ namespace ProjectLincoln.Helpers.DB {
                                   EditedBy INTEGER NULL,
                                   JSONBlob TEXT NULL);" }
                             };
+=======
+<<<<<<< Updated upstream
+                        if (isCreated) {
+                            // Setup the sql statements for the tables
+                            String[] tables = {
+                                @"CREATE TABLE IF NOT EXISTS WeaponType (
+                                  WeaponTypeId INTEGER,
+                                  NOMEN TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS Weapon (
+                                  WeaponSerial TEXT,
+                                  WeaponTypeId INTEGER,
+                                  Assignable TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS AttachmentType (
+                                  AttachmentTypeId INTEGER,
+                                  NOMEN TEXT,
+                                  Assignable TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS Attachment (
+                                  AttachmentId INTEGER,
+                                  AttachmentSerial TEXT,
+                                  AttachmentTypeId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Tamnc (
+                                  Tamnc TEXT,
+                                  NOMEN TEXT,
+                                  PAX INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Trailer (
+                                  TrailerId INTEGER,
+                                  TrailerSerial TEXT,
+                                  Tamnc TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS Truck (
+                                  TruckId INTEGER,
+                                  TruckSerial TEXT,
+                                  PAX INTEGER,
+                                  Tamnc TEXT,
+                                  TrailerId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS WeaponTruck (
+                                  WeaponSerial TEXT,
+                                  TruckId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Services (
+                                  ServiceId INTEGER,
+                                  Name TEXT,
+                                  Abbreviation TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS Unit (
+                                  UnitId INTEGER,
+                                  Name TEXT,
+                                  Abbreviation TEXT,
+                                  ServiceId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Ranks (
+                                  RankId INTEGER,
+                                  Grade TEXT,
+                                  Name TEXT,
+                                  Abbreviation TEXT,
+                                  IsOfficer INTEGER,
+                                  ServiceId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Person (
+                                  PersonId INTEGER,
+                                  Serial TEXT,
+                                  FirstName TEXT,
+                                  MiddleInitial TEXT,
+                                  LastName TEXT,
+                                  BloodType TEXT,
+                                  Sex TEXT,
+                                  MOS TEXT,
+                                  UnitId INTEGER,
+                                  RankId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS WeaponPerson (
+                                  WeaponPersonId INTEGER,
+                                  WeaponSerial TEXT,
+                                  PersonId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS AttachmentTruck (
+                                  AttachmentId INTEGER,
+                                  TruckId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS AttachmentWeapon (
+                                  AttachmentId INTEGER,
+                                  WeaponId TEXT)",
+                                @"CREATE TABLE IF NOT EXISTS AttachmentPerson (
+                                  AttachmentId INTEGER,
+                                  PersonId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS UnitTree (
+                                  UnitTreeId INTEGER,
+                                  UnitId INTEGER,
+                                  ParentId INTEGER)",
+                                @"CREATE TABLE IF NOT EXISTS Manifests (
+                                  ManifestId INTEGER,
+                                  CreatedOn TEXT,
+                                  CreatedBy INTEGER,
+                                  EditedOn TEXT,
+                                  EditedBy INTEGER,
+                                  JSONBlob TEXT)"
+                            };
+=======
+                        if (!isCreated) {
+
+                            #region Drop table statements
+                            // Setup the sql statements for dropping the tables
+                            Dictionary<string, string> dropTables = new Dictionary<string, string>() {
+                                { "Tamcn", @"DROP TABLE IF EXISTS Tamcn;" },
+                                { "WeaponType", @"DROP TABLE IF EXISTS WeaponType;" },
+                                { "Weapon", @"DROP TABLE IF EXISTS Weapon;" },
+                                { "AttachmentType", @"DROP TABLE IF EXISTS AttachmentType;" },
+                                { "Attachment", @"DROP TABLE IF EXISTS Attachment;" },
+                                { "Services", @"DROP TABLE IF EXISTS Services;" },
+                                { "UnitLevel", @"DROP TABLE IF EXISTS UnitLevel;" },
+                                { "Unit", @"DROP TABLE IF EXISTS Unit;" },
+                                { "Trailer", @"DROP TABLE IF EXISTS Trailer;" },
+                                { "Truck", @"DROP TABLE IF EXISTS Truck;" },
+                                { "WeaponTruck", @"DROP TABLE IF EXISTS WeaponTruck;" },
+                                { "Ranks", @"DROP TABLE IF EXISTS Ranks;" },
+                                { "Billet", @"DROP TABLE IF EXISTS Billet;" },
+                                { "Person", @"DROP TABLE IF EXISTS Person;" },
+                                { "WeaponPerson", @"DROP TABLE IF EXISTS WeaponPerson;" },
+                                { "AttachmentTruck", @"DROP TABLE IF EXISTS AttachmentTruck;" },
+                                { "AttachmentWeapon", @"DROP TABLE IF EXISTS AttachmentWeapon;" },
+                                { "AttachmentPerson", @"DROP TABLE IF EXISTS AttachmentPerson;" },
+                                { "Users", @"DROP TABLE IF EXISTS Users;" },
+                                { "Pass", @"DROP TABLE IF EXISTS Pass;" },
+                                { "UnitTree", @"DROP TABLE IF EXISTS UnitTree;" },
+                                { "Manifests", @"DROP TABLE IF EXISTS Manifests;" }
+                            };
+                            #endregion
+
+                            #region Create table statements
+                            // Setup the sql statements for creating the tables
+                            Dictionary<string, string> createTables = new Dictionary<string, string>() {
+                                { "Tamcn", @"CREATE TABLE IF NOT EXISTS Tamcn (
+                                  TamcnId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Tamcn TEXT NOT NULL,
+                                  Nomen TEXT NOT NULL,
+                                  Short TEXT NOT NULL,
+                                  PAX INTEGER NULL,
+                                  IsTruck INTEGER NOT NULL DEFAULT 0,
+                                  IsTrailer INTEGER NOT NULL DEFAULT 0,
+                                  IsWeapon INTEGER NOT NULL DEFAULT 0,
+                                  IsAttachment INTEGER NOT NULL DEFAULT 0);" },
+                                { "WeaponType", @"CREATE TABLE IF NOT EXISTS WeaponType (
+                                  WeaponTypeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TamcnId INTEGER NOT NULL,
+                                  IsPersonnel INTEGER NOT NULL DEFAULT 0,
+                                  IsTruck INTEGER NOT NULL DEFAULT 0);" },
+                                { "Weapon", @"CREATE TABLE IF NOT EXISTS Weapon (
+                                  WeaponId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponSerial TEXT NOT NULL,
+                                  WeaponTypeId INTEGER NOT NULL);" },
+                                { "AttachmentType", @"CREATE TABLE IF NOT EXISTS AttachmentType (
+                                  AttachmentTypeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TamcnId INTEGER NULL,
+                                  Description TEXT NULL,
+                                  IsPersonnel INTEGER NOT NULL DEFAULT 0,
+                                  IsTruck INTEGER NOT NULL DEFAULT 0,
+                                  IsWeapon INTEGER NOT NULL DEFAULT 0);" },
+                                { "Attachment", @"CREATE TABLE IF NOT EXISTS Attachment (
+                                  AttachmentId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentSerial TEXT NOT NULL,
+                                  AttachmentTypeId INTEGER NOT NULL);" },
+                                { "Services", @"CREATE TABLE IF NOT EXISTS Services (
+                                  ServiceId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Name TEXT NULL,
+                                  Abbreviation TEXT NOT NULL);" },
+                                { "UnitLevel", @"CREATE TABLE IF NOT EXISTS UnitLevel (
+                                  UnitLevelId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Level INTEGER NOT NULL,
+                                  Name TEXT NOT NULL,
+                                  Short TEXT NOT NULL,
+                                  ServiceId INTEGER NOT NULL);" },
+                                { "Unit", @"CREATE TABLE IF NOT EXISTS Unit (
+                                  UnitId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Name TEXT NULL,
+                                  Abbreviation TEXT NOT NULL,
+                                  UnitLevelId INTEGER NULL,
+                                  ServiceId INTEGER NULL);" },
+                                { "Trailer", @"CREATE TABLE IF NOT EXISTS Trailer (
+                                  TrailerId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TrailerSerial TEXT NOT NULL,
+                                  TamcnId INTEGER NOT NULL,
+                                  UnitId INTEGER NOT NULL);" },
+                                { "Truck", @"CREATE TABLE IF NOT EXISTS Truck (
+                                  TruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TruckSerial TEXT NOT NULL,
+                                  PAX INTEGER NOT NULL,
+                                  TamcnId INTEGER NOT NULL,
+                                  TrailerId INTEGER NULL,
+                                  UnitId INTEGER NOT NULL);" },
+                                { "WeaponTruck", @"CREATE TABLE IF NOT EXISTS WeaponTruck (
+                                  WeaponTruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponId INTEGER NOT NULL,
+                                  TruckId INTEGER NOT NULL);" },
+                                { "Ranks", @"CREATE TABLE IF NOT EXISTS Ranks (
+                                  RankId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Grade TEXT NOT NULL,
+                                  Name TEXT NOT NULL,
+                                  Abbreviation TEXT NOT NULL,
+                                  IsOfficer INTEGER NOT NULL DEFAULT 0,
+                                  IsWarrant INTEGER NOT NULL DEFAULT 0,
+                                  ServiceId INTEGER NOT NULL);" },
+                                { "Billet", @"CREATE TABLE IF NOT EXISTS Billet (
+                                  BilletId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Code TEXT NULL,
+                                  Name TEXT NOT NULL,
+                                  Short TEXT NULL,
+                                  ServiceId INTEGER NOT NULL,
+                                  IsEnlisted INTEGER NOT NULL DEFAULT 0,
+                                  IsWarrant INTEGER NOT NULL DEFAULT 0,
+                                  IsOfficer INTEGER NOT NULL DEFAULT 0,
+                                  LowRankId INTEGER NULL,
+                                  HighRankId INTEGER NULL);" },
+                                { "Person", @"CREATE TABLE IF NOT EXISTS Person (
+                                  PersonId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Serial TEXT NULL,
+                                  FirstName TEXT NULL,
+                                  MiddleInitial TEXT NULL,
+                                  LastName TEXT NOT NULL,
+                                  BloodType TEXT NULL,
+                                  Sex TEXT NOT NULL,
+                                  BilletId INTEGER NOT NULL,
+                                  UnitId INTEGER NOT NULL,
+                                  RankId INTEGER NULL,
+                                  ServiceId INTEGER NOT NULL);" },
+                                { "WeaponPerson", @"CREATE TABLE IF NOT EXISTS WeaponPerson (
+                                  WeaponPersonId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponId INTEGER NOT NULL,
+                                  PersonId INTEGER NOT NULL);" },
+                                { "AttachmentTruck", @"CREATE TABLE IF NOT EXISTS AttachmentTruck (
+                                  AttachmentTruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentId INTEGER NOT NULL,
+                                  TruckId INTEGER NOT NULL);" },
+                                { "AttachmentWeapon", @"CREATE TABLE IF NOT EXISTS AttachmentWeapon (
+                                  AttachmentWeaponId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentId INTEGER NOT NULL,
+                                  WeaponId INTEGER NOT NULL);" },
+                                { "AttachmentPerson", @"CREATE TABLE IF NOT EXISTS AttachmentPerson (
+                                  AttachmentPersonID INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentId INTEGER NOT NULL,
+                                  PersonId INTEGER NOT NULL);" },
+                                { "Users", @"CREATE TABLE IF NOT EXISTS Users (
+                                  UserId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Username TEXT NOT NULL,
+                                  LastUpdated DATE NULL,
+                                  LastLogin DATE NULL,
+                                  Activated INTEGER NULL DEFAULT 0,
+                                  UnitId INTEGER NULL,
+                                  IsDevAdmin INTEGER NULL DEFAULT 0,
+                                  IsUnitAdmin INTEGER NULL DEFAULT 0,
+                                  IsUserAdmin INTEGER NULL DEFAULT 0);" },
+                                { "Pass", @"CREATE TABLE IF NOT EXISTS Pass (
+                                  UserId INTEGER NOT NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  Pass TEXT NOT NULL,
+                                  Salt TEXT NOT NULL);" },
+                                { "UnitTree", @"CREATE TABLE IF NOT EXISTS UnitTree (
+                                  UnitTreeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  UnitId INTEGER NOT NULL,
+                                  ParentId INTEGER NOT NULL);" },
+                                { "Manifests", @"CREATE TABLE IF NOT EXISTS Manifests (
+                                  ManifestId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  CreatedOn DATE NOT NULL,
+                                  CreatedBy INTEGER NOT NULL,
+                                  EditedOn DATE NULL,
+                                  EditedBy INTEGER NULL,
+                                  JSONBlob TEXT NULL);" }
+                            };
+>>>>>>> Stashed changes
                             #endregion
 
                             #region Drop tables
                             // Run the queries to drop the tables
                             foreach (KeyValuePair<string, string> table in dropTables) {
                                 // Show the new message
+<<<<<<< Updated upstream
                                 splash.updateLoadingMessage(string.Format("Dropping the local table {0}", table.Key));
+=======
+                                splash.updateLoadingMessage(SplashElement.Label, string.Format("Dropping the local table {0}", table.Key));
+>>>>>>> Stashed changes
 
                                 // Set the command text
                                 comm.CommandText = table.Value;
@@ -248,7 +547,12 @@ namespace ProjectLincoln.Helpers.DB {
                             // Run the queries to create the tables
                             foreach (KeyValuePair<string, string> table in createTables) {
                                 // Show the new message
+<<<<<<< Updated upstream
                                 splash.updateLoadingMessage(string.Format("Creating the local table {0}", table.Key));
+=======
+                                splash.updateLoadingMessage(SplashElement.Label, string.Format("Creating the local table {0}", table.Key));
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
                                 // Set the command text
                                 comm.CommandText = table.Value;
@@ -284,6 +588,13 @@ namespace ProjectLincoln.Helpers.DB {
             }
         }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+        internal void syncData (List<string> syncData) {
+            throw new NotImplementedException();
+=======
+>>>>>>> Stashed changes
         /// <summary>
         /// Inserts all of the provided data into the local db
         /// </summary>
@@ -301,7 +612,11 @@ namespace ProjectLincoln.Helpers.DB {
                         // Run the queries to drop the tables
                         for (int i = 0; i < syncData.Count; i++) {
                             // Show the new message
+<<<<<<< Updated upstream
                             splash.updateLoadingMessage(string.Format("Inserting row {0} of {1}.", i, syncData.Count));
+=======
+                            splash.updateLoadingMessage(SplashElement.Label, string.Format("Inserting row {0} of {1}.", i, syncData.Count));
+>>>>>>> Stashed changes
 
                             // Set the command text
                             comm.CommandText = syncData[i];
@@ -333,6 +648,10 @@ namespace ProjectLincoln.Helpers.DB {
                     #endregion
                 }
             }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         }
     }
 }
