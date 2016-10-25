@@ -4,7 +4,7 @@ using System.Diagnostics;
 using MySql.Data.MySqlClient;
 
 using ProjectLincoln.Properties;
-using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace ProjectLincoln.Helpers.DB {
     public class MySQL : DatabaseAbstract {
@@ -14,12 +14,22 @@ namespace ProjectLincoln.Helpers.DB {
         public MySqlCommand comm = null; // The database command object
         public MySqlDataReader reader = null; // The database reader
 
+        private Splash splash = null; // The local reference to the splash screen
+
         /// <summary>
         /// Constructor
         /// </summary>
         public MySQL () {
             // Initialize all of the database objects
             buildDbObjects();
+        }
+
+        /// <summary>
+        /// Sets the local reference to the splash screen
+        /// </summary>
+        /// <param name="splash">The reference to the splash screen</param>
+        public void setSplash(Splash splash) {
+            this.splash = splash;
         }
 
         /// <summary>
@@ -37,7 +47,7 @@ namespace ProjectLincoln.Helpers.DB {
                 newSql.conn = new MySqlConnection(newSql.connectionString);
                 newSql.conn.Open();
 
-                // Prepaire the command
+                // Prepare the command
                 newSql.comm = new MySqlCommand(query.ToString(), newSql.conn);
                 newSql.comm.Prepare();
 

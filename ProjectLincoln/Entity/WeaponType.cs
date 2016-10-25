@@ -21,7 +21,7 @@ namespace ProjectLincoln.Entity {
         /// <param name="weaponTypeId">The weapon type's id</param>
         /// <param name="tamcnId">Optional: The weapon type's tamcn</param>
         /// <param name="IsPersonnel">Is this for a person?</param>
-        /// <param name="isTruck">Is this for for a truck?</param>
+        /// <param name="isTruck">Is this for a truck?</param>
         public WeaponType (int? weaponTypeId, int? tamcnId, bool isPersonnel, bool isTruck) {
             this.WeaponTypeId = weaponTypeId;
             this.TamcnId = tamcnId;

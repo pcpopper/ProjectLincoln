@@ -5,7 +5,7 @@ using ProjectLincoln.Enums;
 
 namespace ProjectLincoln.Helpers.DB {
     public class Insert {
-        private DatabaseType dbType = DatabaseType.MySql; // The type of databae
+        private DatabaseType dbType = DatabaseType.MySql; // The type of database
         private string table = ""; // The table's name
         private Dictionary<string, Object> fields = null; // The fields to insert
 

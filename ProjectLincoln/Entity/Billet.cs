@@ -30,7 +30,7 @@ namespace ProjectLincoln.Entity {
         /// <param name="shortDesc">The billet's short description</param>
         /// <param name="serviceId">The billet's service id</param>
         /// <param name="isEnlisted">Is this billet for enlisted</param>
-        /// <param name="isWarrant">Is this billet for warant officer</param>
+        /// <param name="isWarrant">Is this billet for warrant officer</param>
         /// <param name="isOfficer">Is this billet for officer</param>
         /// <param name="lowRankId">The lowest rank for this billet</param>
         /// <param name="highRankId">The highest rank for this billet</param>

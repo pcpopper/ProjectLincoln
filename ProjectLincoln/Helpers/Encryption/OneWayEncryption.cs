@@ -49,7 +49,7 @@ namespace ProjectLincoln.Helpers.Encryption {
         /// Generates a hash from the supplied parameters
         /// </summary>
         /// <param name="password">The requested password</param>
-        /// <param name="salt">Optional: A 29 chacter salt</param>
+        /// <param name="salt">Optional: A 29 character salt</param>
         /// <returns>A dictionary containing the 29 character salt string and the hash</returns>
         public static Dictionary<string, string> generateHash (string password, string salt = null) {
             try {

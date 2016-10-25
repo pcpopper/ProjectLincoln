@@ -122,7 +122,7 @@ namespace ProjectLincoln.Services {
                 if (Settings.Default.DevMode) {
                     Debug.WriteLine(
                         String.Format(
-                            "An error has occurred: {1}\n{2}",
+                            "An error has occurred: {0}\n{1}",
                             ex.Message,
                             ex.StackTrace));
                 }
