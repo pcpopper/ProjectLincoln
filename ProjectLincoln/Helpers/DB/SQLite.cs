@@ -38,7 +38,7 @@ namespace ProjectLincoln.Helpers.DB {
             if (Settings.Default.DevMode) {
                 try {
                     System.IO.File.Delete(dbPath);
-                } catch (Exception ex) {
+                } catch (Exception) {
                     // Do nothing with the exception
                 }
             }
@@ -93,7 +93,8 @@ namespace ProjectLincoln.Helpers.DB {
                             // Setup the sql statements for creating the tables
                             Dictionary<string, string> createTables = new Dictionary<string, string>() {
                                 { "Tamcn", @"CREATE TABLE IF NOT EXISTS Tamcn (
-                                  TamcnId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TamcnId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Tamcn TEXT NOT NULL,
                                   Nomen TEXT NOT NULL,
                                   Short TEXT NOT NULL,
@@ -103,60 +104,70 @@ namespace ProjectLincoln.Helpers.DB {
                                   IsWeapon INTEGER NOT NULL DEFAULT 0,
                                   IsAttachment INTEGER NOT NULL DEFAULT 0);" },
                                 { "WeaponType", @"CREATE TABLE IF NOT EXISTS WeaponType (
-                                  WeaponTypeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponTypeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   TamcnId INTEGER NOT NULL,
                                   IsPersonnel INTEGER NOT NULL DEFAULT 0,
                                   IsTruck INTEGER NOT NULL DEFAULT 0);" },
                                 { "Weapon", @"CREATE TABLE IF NOT EXISTS Weapon (
-                                  WeaponId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   WeaponSerial TEXT NOT NULL,
                                   WeaponTypeId INTEGER NOT NULL);" },
                                 { "AttachmentType", @"CREATE TABLE IF NOT EXISTS AttachmentType (
-                                  AttachmentTypeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentTypeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   TamcnId INTEGER NULL,
                                   Description TEXT NULL,
                                   IsPersonnel INTEGER NOT NULL DEFAULT 0,
                                   IsTruck INTEGER NOT NULL DEFAULT 0,
                                   IsWeapon INTEGER NOT NULL DEFAULT 0);" },
                                 { "Attachment", @"CREATE TABLE IF NOT EXISTS Attachment (
-                                  AttachmentId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   AttachmentSerial TEXT NOT NULL,
                                   AttachmentTypeId INTEGER NOT NULL);" },
                                 { "Services", @"CREATE TABLE IF NOT EXISTS Services (
-                                  ServiceId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  ServiceId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Name TEXT NULL,
                                   Abbreviation TEXT NOT NULL);" },
                                 { "UnitLevel", @"CREATE TABLE IF NOT EXISTS UnitLevel (
-                                  UnitLevelId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  UnitLevelId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Level INTEGER NOT NULL,
                                   Name TEXT NOT NULL,
                                   Short TEXT NOT NULL,
                                   ServiceId INTEGER NOT NULL);" },
                                 { "Unit", @"CREATE TABLE IF NOT EXISTS Unit (
-                                  UnitId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  UnitId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Name TEXT NULL,
                                   Abbreviation TEXT NOT NULL,
                                   UnitLevelId INTEGER NULL,
-                                  ServiceId INTEGER NULL,
-                                  Updated DATE NOT NULL);" },
+                                  ServiceId INTEGER NULL);" },
                                 { "Trailer", @"CREATE TABLE IF NOT EXISTS Trailer (
-                                  TrailerId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TrailerId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   TrailerSerial TEXT NOT NULL,
                                   TamcnId INTEGER NOT NULL,
                                   UnitId INTEGER NOT NULL);" },
                                 { "Truck", @"CREATE TABLE IF NOT EXISTS Truck (
-                                  TruckId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  TruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   TruckSerial TEXT NOT NULL,
                                   PAX INTEGER NOT NULL,
                                   TamcnId INTEGER NOT NULL,
                                   TrailerId INTEGER NULL,
                                   UnitId INTEGER NOT NULL);" },
                                 { "WeaponTruck", @"CREATE TABLE IF NOT EXISTS WeaponTruck (
-                                  WeaponTruckId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponTruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   WeaponId INTEGER NOT NULL,
                                   TruckId INTEGER NOT NULL);" },
                                 { "Ranks", @"CREATE TABLE IF NOT EXISTS Ranks (
-                                  RankId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  RankId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Grade TEXT NOT NULL,
                                   Name TEXT NOT NULL,
                                   Abbreviation TEXT NOT NULL,
@@ -164,7 +175,8 @@ namespace ProjectLincoln.Helpers.DB {
                                   IsWarrant INTEGER NOT NULL DEFAULT 0,
                                   ServiceId INTEGER NOT NULL);" },
                                 { "Billet", @"CREATE TABLE IF NOT EXISTS Billet (
-                                  BilletId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  BilletId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Code TEXT NULL,
                                   Name TEXT NOT NULL,
                                   Short TEXT NULL,
@@ -175,7 +187,8 @@ namespace ProjectLincoln.Helpers.DB {
                                   LowRankId INTEGER NULL,
                                   HighRankId INTEGER NULL);" },
                                 { "Person", @"CREATE TABLE IF NOT EXISTS Person (
-                                  PersonId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  PersonId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Serial TEXT NULL,
                                   FirstName TEXT NULL,
                                   MiddleInitial TEXT NULL,
@@ -187,23 +200,28 @@ namespace ProjectLincoln.Helpers.DB {
                                   RankId INTEGER NULL,
                                   ServiceId INTEGER NOT NULL);" },
                                 { "WeaponPerson", @"CREATE TABLE IF NOT EXISTS WeaponPerson (
-                                  WeaponPersonId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  WeaponPersonId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   WeaponId INTEGER NOT NULL,
                                   PersonId INTEGER NOT NULL);" },
                                 { "AttachmentTruck", @"CREATE TABLE IF NOT EXISTS AttachmentTruck (
-                                  AttachmentTruckId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentTruckId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   AttachmentId INTEGER NOT NULL,
                                   TruckId INTEGER NOT NULL);" },
                                 { "AttachmentWeapon", @"CREATE TABLE IF NOT EXISTS AttachmentWeapon (
-                                  AttachmentWeaponId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentWeaponId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   AttachmentId INTEGER NOT NULL,
                                   WeaponId INTEGER NOT NULL);" },
                                 { "AttachmentPerson", @"CREATE TABLE IF NOT EXISTS AttachmentPerson (
-                                  AttachmentPersonID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  AttachmentPersonID INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   AttachmentId INTEGER NOT NULL,
                                   PersonId INTEGER NOT NULL);" },
                                 { "Users", @"CREATE TABLE IF NOT EXISTS Users (
-                                  UserId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  UserId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Username TEXT NOT NULL,
                                   LastUpdated DATE NULL,
                                   LastLogin DATE NULL,
@@ -214,14 +232,17 @@ namespace ProjectLincoln.Helpers.DB {
                                   IsUserAdmin INTEGER NULL DEFAULT 0);" },
                                 { "Pass", @"CREATE TABLE IF NOT EXISTS Pass (
                                   UserId INTEGER NOT NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   Pass TEXT NOT NULL,
                                   Salt TEXT NOT NULL);" },
                                 { "UnitTree", @"CREATE TABLE IF NOT EXISTS UnitTree (
-                                  UnitTreeId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  UnitTreeId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   UnitId INTEGER NOT NULL,
                                   ParentId INTEGER NOT NULL);" },
                                 { "Manifests", @"CREATE TABLE IF NOT EXISTS Manifests (
-                                  ManifestId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                  ManifestId INTEGER NULL,
+                                  LocalId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                                   CreatedOn DATE NOT NULL,
                                   CreatedBy INTEGER NOT NULL,
                                   EditedOn DATE NULL,
@@ -234,7 +255,7 @@ namespace ProjectLincoln.Helpers.DB {
                             // Run the queries to drop the tables
                             foreach (KeyValuePair<string, string> table in dropTables) {
                                 // Show the new message
-                                splash.updateLoadingMessage(string.Format("Dropping the local table {0}", table.Key));
+                                splash.updateLoadingMessage(SplashElement.Label, string.Format("Dropping the local table {0}", table.Key));
 
                                 // Set the command text
                                 comm.CommandText = table.Value;
@@ -248,7 +269,7 @@ namespace ProjectLincoln.Helpers.DB {
                             // Run the queries to create the tables
                             foreach (KeyValuePair<string, string> table in createTables) {
                                 // Show the new message
-                                splash.updateLoadingMessage(string.Format("Creating the local table {0}", table.Key));
+                                splash.updateLoadingMessage(SplashElement.Label, string.Format("Creating the local table {0}", table.Key));
 
                                 // Set the command text
                                 comm.CommandText = table.Value;
@@ -301,7 +322,7 @@ namespace ProjectLincoln.Helpers.DB {
                         // Run the queries to drop the tables
                         for (int i = 0; i < syncData.Count; i++) {
                             // Show the new message
-                            splash.updateLoadingMessage(string.Format("Inserting row {0} of {1}.", i, syncData.Count));
+                            splash.updateLoadingMessage(SplashElement.Label, string.Format("Inserting row {0} of {1}.", i, syncData.Count));
 
                             // Set the command text
                             comm.CommandText = syncData[i];

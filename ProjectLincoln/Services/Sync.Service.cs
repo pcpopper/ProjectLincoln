@@ -23,7 +23,7 @@ namespace ProjectLincoln.Services {
         /// <param name="region">The region that is calling this update</param>
         private void updateLoadingMessage (string region) {
             // Update the loading message
-            splash.updateLoadingMessage(string.Format("Getting the appropriate {0} data", region));
+            splash.updateLoadingMessage(SplashElement.Label, string.Format("Getting the appropriate {0} data", region));
         }
 
         /// <summary>
@@ -35,16 +35,16 @@ namespace ProjectLincoln.Services {
             // Initialize this class
             SyncService service = new SyncService(splash);
 
-            // Initialize the insertStatements
-            List<string> insertStatements = new List<string>();
-
             // Initialize the local lists
+            #region int Lists
             List<int> 
                 attachmentIds = new List<int>(),
                 personnelIds = new List<int>(),
                 syncUnits = new List<int>() { Settings.Default.UnitId },
                 truckIds = new List<int>(),
                 weaponIds = new List<int>();
+            #endregion
+            #region string Lists
             List<string>
                 tamcnsInserts = new List<string>(),
                 weaponTypeInserts = new List<string>(),
@@ -64,55 +64,57 @@ namespace ProjectLincoln.Services {
                 attachmentTruckInserts = new List<string>(),
                 attachmentWeaponInserts = new List<string>(),
                 attachmentPersonInserts = new List<string>(),
-                unitTreeInserts = new List<string>();
+                unitTreeInserts = new List<string>(),
+                insertStatements = new List<string>();
+            #endregion
 
             #region TAMCNs
             // Update the loading message
             service.updateLoadingMessage("TAMCNs");
 
-            // Add the insert statements to the insertStatements for the tamcns
+            // Get the insert statements
             tamcnsInserts = TamncService.retrieveTamcns().getInserts(DatabaseType.SQLite);
             #endregion
             #region Unit Levels
             // Update the loading message
             service.updateLoadingMessage("Unit Levels");
 
-            // Add the insert statements to the insertStatements for the unit levels
+            // Get the insert statements
             unitLevelInserts = UnitLevelService.retrieveUnitLevels().getInserts(DatabaseType.SQLite);
             #endregion
             #region Billets
             // Update the loading message
             service.updateLoadingMessage("Billets");
 
-            // Add the insert statements to the insertStatements for the billets
+            // Get the insert statements
             billetInserts = BilletService.retrieveBillets().getInserts(DatabaseType.SQLite);
             #endregion
             #region Ranks
             // Update the loading message
             service.updateLoadingMessage("Ranks");
 
-            // Add the insert statements to the insertStatements for the ranks
+            // Get the insert statements
             ranksInserts = RankService.retrieveRanks().getInserts(DatabaseType.SQLite);
             #endregion
             #region Services
             // Update the loading message
             service.updateLoadingMessage("Services");
 
-            // Add the insert statements to the insertStatements for the services
+            // Get the insert statements
             servicesInserts = ServicesService.retrieveServices().getInserts(DatabaseType.SQLite);
             #endregion
             #region AttachmentTypes
             // Update the loading message
             service.updateLoadingMessage("Attachment Types");
 
-            // Add the insert statements to the insertStatements for the attachment types
+            // Get the insert statements
             attachmentTypeInserts = AttachmentTypeService.retrieveTypes().getInserts(DatabaseType.SQLite);
             #endregion
             #region WeaponTypes
             // Update the loading message
             service.updateLoadingMessage("Weapon Types");
 
-            // Add the insert statements to the insertStatements for the weapon types
+            // Get the insert statements
             weaponInserts = WeaponTypeService.retrieveTypes().getInserts(DatabaseType.SQLite);
             #endregion
             #region Units and the tree
@@ -125,11 +127,11 @@ namespace ProjectLincoln.Services {
 
             // Get the parents from the unit tree and their insert statements
             utService = UnitTreeService.getUnitTree(Settings.Default.UnitId, TreeTraversalDirection.Parents);
-            insertStatements.AddRange(utService.getCombinedLists(true, DatabaseType.SQLite));
+            unitInserts = utService.getCombinedLists(true, DatabaseType.SQLite);
             #endregion
 
             // Get the top-most unit's insert statement
-            insertStatements.Add(UnitService.getUnit(utService.getLastParent()).ToInsert(DatabaseType.SQLite));
+            unitInserts.Add(UnitService.getUnit(utService.getLastParent()).ToInsert(DatabaseType.SQLite));
 
             #region Children
             // Update the loading message
@@ -137,11 +139,11 @@ namespace ProjectLincoln.Services {
 
             // Get the parents from the unit tree and their insert statements
             utService = UnitTreeService.getUnitTree(Settings.Default.UnitId, TreeTraversalDirection.Children);
-            insertStatements.AddRange(utService.getCombinedLists(true, DatabaseType.SQLite));
-            #endregion
+            unitInserts.AddRange(utService.getCombinedLists(true, DatabaseType.SQLite));
 
             // Add the list of child units to the sync list
             syncUnits.AddRange(utService.getUnitIds());
+            #endregion
             #endregion
             #region Trucks
             // Update the loading message
@@ -155,15 +157,15 @@ namespace ProjectLincoln.Services {
                 truck.TruckId.IfNotNull(id => truckIds.Add(id));
             });
 
-            // Add the insert statements to the insertStatements for the services
-            insertStatements.AddRange(truckService.getInserts(DatabaseType.SQLite));
+            // Get the insert statements
+            truckInserts = truckService.getInserts(DatabaseType.SQLite);
             #endregion
             #region Trailers 
             // Update the loading message
             service.updateLoadingMessage("Trailers");
 
-            // Add the insert statements to the insertStatements for the trailers
-            insertStatements.AddRange(TrailerService.retrieveTrailers().getInserts(DatabaseType.SQLite));
+            // Get the insert statements
+            trailerInserts = TrailerService.retrieveTrailers().getInserts(DatabaseType.SQLite);
             #endregion
             #region Personnel
             // Update the loading message
@@ -177,8 +179,8 @@ namespace ProjectLincoln.Services {
                 person.PersonId.IfNotNull(id => personnelIds.Add(id));
             });
 
-            // Add the insert statements to the insertStatements for the services
-            insertStatements.AddRange(personService.getInserts(DatabaseType.SQLite));
+            // Get the insert statements
+            personInserts = personService.getInserts(DatabaseType.SQLite);
             #endregion
             #region Trucks' Weapons
             // Update the loading message
@@ -192,8 +194,8 @@ namespace ProjectLincoln.Services {
                 weapon.WeaponId.IfNotNull(id => weaponIds.Add(id));
             });
 
-            // Add the insert statements to the insertStatements for the trucks' weapons
-            insertStatements.AddRange(wtService.getInserts(DatabaseType.SQLite));
+            // Get the insert statements
+            weaponTruckInserts = wtService.getInserts(DatabaseType.SQLite);
             #endregion
             #region Personnels' Weapons
             // Update the loading message
@@ -202,15 +204,15 @@ namespace ProjectLincoln.Services {
             // Initialize the weapon trucks service and retrieve the data
             WeaponPersonService pService = WeaponPersonService.retrieveWeapons(personnelIds);
 
-            // Get the weapon's ids and if not duplicate, add to both lists
+            // Get the weapon's ids
             pService.getWeapons().ForEach(delegate (Weapon weapon) {
                 weapon.WeaponId.IfNotNull(weaponId => {
-                    weaponIds.IfNotContains(weaponId, id => {
-                        attachmentIds.Add(id);
-                        insertStatements.Add(weapon.ToInsert());
-                    });
+                    weaponIds.AddIfNotContains(weaponId);
                 });
             });
+
+            // Get the insert statements
+            weaponPersonInserts = pService.getInserts();
             #endregion
             #region Weapons' attachments
             // Update the loading message
@@ -224,8 +226,8 @@ namespace ProjectLincoln.Services {
                 attachment.AttachmentId.IfNotNull(id => attachmentIds.Add(id));
             });
 
-            // Add the insert statements to the insertStatements for the personnels' weapons
-            insertStatements.AddRange(awService.getInserts(DatabaseType.SQLite));
+            // Get the insert statements
+            attachmentWeaponInserts = awService.getInserts(DatabaseType.SQLite);
             #endregion
             #region Personnels' attachments
             // Update the loading message
@@ -236,12 +238,12 @@ namespace ProjectLincoln.Services {
 
             apService.getAttachments().ForEach(delegate (Attachment attachment) {
                 attachment.AttachmentId.IfNotNull(attachmentId => {
-                    attachmentIds.IfNotContains(attachmentId, id => {
-                        attachmentIds.Add(id);
-                        insertStatements.Add(attachment.ToInsert());
-                    });
+                    attachmentIds.AddIfNotContains(attachmentId);
                 });
             });
+
+            // Get the insert statements
+            attachmentPersonInserts = apService.getInserts();
             #endregion
             #region Trucks' attachments
             // Update the loading message
@@ -252,12 +254,12 @@ namespace ProjectLincoln.Services {
 
             atService.getAttachments().ForEach(delegate (Attachment attachment) {
                 attachment.AttachmentId.IfNotNull(attachmentId => {
-                    attachmentIds.IfNotContains(attachmentId, id => {
-                        attachmentIds.Add(id);
-                        insertStatements.Add(attachment.ToInsert());
-                    });
+                    attachmentIds.AddIfNotContains(attachmentId);
                 });
             });
+
+            // Get the insert statements
+            attachmentTruckInserts = pService.getInserts();
             #endregion
 
             #region Concatenation
