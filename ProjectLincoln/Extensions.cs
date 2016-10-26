@@ -68,5 +68,14 @@ namespace ProjectLincoln {
         public static void AddIfNotContains<T> (this List<T> list, T item) {
             if (!list.Contains(item)) { list.Add(item); }
         }
+
+        /// <summary>
+        /// Converts a float to an int by rounding
+        /// </summary>
+        /// <param name="number">The float to convert</param>
+        /// <returns>The integer value</returns>
+        public static int toInt (this float number) {
+            return (int)Math.Round(number, MidpointRounding.AwayFromZero);
+        }
     }
 }

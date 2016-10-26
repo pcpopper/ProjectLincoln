@@ -73,7 +73,7 @@ namespace ProjectLincoln.Services {
             service.updateLoadingMessage("TAMCNs");
 
             // Get the insert statements
-            tamcnsInserts = TamncService.retrieveTamcns().getInserts(DatabaseType.SQLite);
+            tamcnsInserts = TamcnService.retrieveTamcns().getInserts(DatabaseType.SQLite);
             #endregion
             #region Unit Levels
             // Update the loading message

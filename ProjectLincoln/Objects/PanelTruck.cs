@@ -25,17 +25,31 @@ namespace ProjectLincoln.Objects {
         private FormMain frmMain;
         #endregion
 
-        #region Draggable
-        private bool isDragging = false;
-        private Point dragStartLocation;
-        private int dragStartIndex;
-        private int dragLastTop;
-        private int dragLastIndex;
-        private Color dragColor = SystemColors.Highlight;
-        private float movementTime = 0;
-        private float movementIncrements;
-        private bool previewMove = true;
-        #endregion
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="truck">The truck dao</param>
+        public TruckPanel (Truck truck) {
+            this.truck = truck;
+            pax = new List<Person>();
+
+            // Create and preload the attachments dictionary
+            attachments = new Dictionary<string, Attachment>() {
+                { "weapon-optics", null },
+                { "com", null },
+                { "bft", null },
+                { "dggr", null }
+            };
+
+            // Get the tamcn information
+            truckTamcn = TamcnService.retrieveTamcn(truck.TamcnId);
+
+            // Get FormMain's instance
+            frmMain = FormMain.frmMain;
+
+            // Create the panel
+            doInitPanel();
+        }
 
         #region UI
         private PictureBox pbHandle, pbIcon;
@@ -47,7 +61,6 @@ namespace ProjectLincoln.Objects {
             lblBFTText, lblBFT,
             lblDGGRText, lblDGGR,
             lblComText, lblCom;
-        #endregion
 
         #region UI Settings
         // rows and cols
@@ -71,102 +84,6 @@ namespace ProjectLincoln.Objects {
         private static FontStyle boldFont = FontStyle.Bold;
         private static float bigFontSize = 18;
         private static float regularFontSize = 12;
-        #endregion
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="truck">The truck dao</param>
-        public TruckPanel (Truck truck) {
-            this.truck = truck;
-            pax = new List<Person>();
-
-            // Create and preload the attachments dictionary
-            attachments = new Dictionary<string, Attachment>() {
-                { "weapon-optics", null },
-                { "com", null },
-                { "bft", null },
-                { "dggr", null }
-            };
-
-            // Get the tamcn information
-            truckTamcn = TamcnService.retrieveTamcn(truck.TamcnId);
-
-            // Get FormMain's instance
-            frmMain = FormMain.frmMain;
-
-            // Create the timer
-            Timer tmrMove = new Timer();
-            tmrMove.Interval = 100;
-            tmrMove.Tick += Timer_Tick;
-
-            // Create the panel
-            doInitPanel();
-        }
-
-        #region PAX management
-        /// <summary>
-        /// Adds a person to the truck
-        /// </summary>
-        /// <param name="pack">The person dao to add</param>
-        /// <returns>The add status</returns>
-        public bool addPax (Person pack) {
-            bool addStatus = false;
-
-            // Check if the truck is full
-            if ((pax.Count + 1) <= truck.PAX) {
-                pax.Add(pack);
-                addStatus = true;
-            }
-
-            // Update the UI
-            setPaxValue();
-
-            return addStatus;
-        }
-
-        /// <summary>
-        /// Updates the UI with the personnel information
-        /// </summary>
-        private void setPaxValue () {
-            // Set the ?/? label
-            lblPax.Text = pax.Count.ToString() + "/" + truck.PAX.ToString();
-
-            // Set the tooltip for said label
-            string toolTip = "";
-            for (int i = 0;i < pax.Count;i++) {
-                // Add the first part of each line
-                switch (i) {
-                    case 0:
-                        toolTip += "Driver: ";
-                        break;
-                    case 1:
-                        toolTip += "A-Driver: ";
-                        break;
-                    default:
-                        toolTip += "Passenger: ";
-                        break;
-                }
-
-                // Add the name
-                toolTip += string.Format("{0}, {1} {2}",
-                    pax[i].LastName,
-                    pax[i].FirstName, 
-                    (pax[i].MiddleInitial != null) ? pax[i].MiddleInitial + "." : "");
-
-                // Add a new line to the string if not the last name
-                if (i != (pax.Count - 1)) { toolTip += "\n"; }
-            }
-
-            // Update the tooltip with the new text
-            FormMain.frmMain.ttPax.SetToolTip(lblPax, toolTip);
-        }
-        #endregion
-
-        #region Weapon
-        #endregion
-
-        #region Attachments
         #endregion
 
         /// <summary>
@@ -201,7 +118,7 @@ namespace ProjectLincoln.Objects {
             lblSerialText = new Label();
             lblSerialText.Text = "Serial:";
             lblSerialText.Font = new Font(fontFamily, bigFontSize, boldFont);
-            lblSerialText.Location = new Point(cols[0,0], (rows[0] - 2));
+            lblSerialText.Location = new Point(cols[0, 0], (rows[0] - 2));
             lblSerial = new Label();
             lblSerial.Text = truck.TruckSerial;
             lblSerial.Font = new Font(fontFamily, bigFontSize, boldFont);
@@ -311,22 +228,152 @@ namespace ProjectLincoln.Objects {
             pbIcon.Load();
             setPaxValue();
         }
+        #endregion
+
+        #region PAX management
+        /// <summary>
+        /// Adds a person to the truck
+        /// </summary>
+        /// <param name="pack">The person dao to add</param>
+        /// <returns>The add status</returns>
+        public bool addPax (Person pack) {
+            bool addStatus = false;
+
+            // Check if the truck is full
+            if ((pax.Count + 1) <= truck.PAX) {
+                pax.Add(pack);
+                addStatus = true;
+            }
+
+            // Update the UI
+            setPaxValue();
+
+            return addStatus;
+        }
+
+        /// <summary>
+        /// Updates the UI with the personnel information
+        /// </summary>
+        private void setPaxValue () {
+            // Set the ?/? label
+            lblPax.Text = pax.Count.ToString() + "/" + truck.PAX.ToString();
+
+            // Set the tooltip for said label
+            string toolTip = "";
+            for (int i = 0;i < pax.Count;i++) {
+                // Add the first part of each line
+                switch (i) {
+                    case 0:
+                        toolTip += "Driver: ";
+                        break;
+                    case 1:
+                        toolTip += "A-Driver: ";
+                        break;
+                    default:
+                        toolTip += "Passenger: ";
+                        break;
+                }
+
+                // Add the name
+                toolTip += string.Format("{0}, {1} {2}",
+                    pax[i].LastName,
+                    pax[i].FirstName, 
+                    (pax[i].MiddleInitial != null) ? pax[i].MiddleInitial + "." : "");
+
+                // Add a new line to the string if not the last name
+                if (i != (pax.Count - 1)) { toolTip += "\n"; }
+            }
+
+            // Update the tooltip with the new text
+            FormMain.frmMain.ttPax.SetToolTip(lblPax, toolTip);
+        }
+        #endregion
+
+        #region Weapon
+        #endregion
+
+        #region Attachments
+        #endregion
 
         #region Panel Movement
+
+        #region Draggable Settings
+        private bool isDragging = false;
+        private Point dragStartLocation;
+        private Point dragCurrLocation;
+        private Point dragLastLocation;
+        private int dragLastIndex;
+        private int currentY;
+
+        private float movementTime = 0.2f;
+        private int ticksTime = 100; // Amount of time in msec per tick
+
+        private int movementDestination;
+        private int movementStart;
+        private float movementIncrements;
+        private float movementTicks;
+        private Timer movementTimer;
+        private float ticksCompleted;
+
+        private Color dragColor = SystemColors.Highlight;
+        public bool previewMove = true;
+        #endregion
+
+        /// <summary>
+        /// Moves the panel to the specified location
+        /// </summary>
+        /// <param name="newIndex">The new index of the panel</param>
         public void moveTruck (int newIndex) {
             // Calculate the new final location
-            int finalLocation = panelDimensions.Height * newIndex;
+            movementDestination = panelDimensions.Height * newIndex;
+
+            // Set the current location
+            movementStart = panel.Top;
 
             // Check if this is going to be moved in increments
             if (movementTime > 0) {
+                // Number of ticks to cover the movement time
+                movementTicks = movementTime * (1000 / ticksTime);
 
+                // Get the amount to move per tick
+                movementIncrements = Math.Abs(movementDestination - panel.Top) / movementTicks;
+
+                // Reset the number of ticks completed to 0
+                ticksCompleted = 0;
+
+                // Create the timer
+                movementTimer = new Timer();
+                movementTimer.Interval = ticksTime;
+                movementTimer.Tick += Timer_Tick;
+                movementTimer.Start();
             } else {
-                panel.Top = finalLocation;
+                panel.Top = movementDestination;
             }
         }
 
+        /// <summary>
+        /// Handles the ticks of the movement timer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer_Tick (object sender, EventArgs e) {
+            if (ticksCompleted < movementTicks) {
+                // Move by one increment
+                if ((movementDestination - movementStart) > 0) {
+                    panel.Top += movementIncrements.toInt();
+                } else {
+                    panel.Top -= movementIncrements.toInt();
+                }
 
+                // Increment the ticks
+                ticksCompleted++;
+            } else if (ticksCompleted == movementTicks) {
+                // Move to the final position
+                panel.Top = movementDestination;
+
+                // Stop the timer
+                movementTimer.Stop();
+            }
         }
 
         /// <summary>
@@ -339,6 +386,20 @@ namespace ProjectLincoln.Objects {
             if (e.Button == MouseButtons.Left) {
                 // Set the current location of the panel in case it gets moved
                 dragStartLocation = e.Location;
+                dragLastLocation = e.Location;
+
+                // Get this panel's list index
+                dragLastIndex = frmMain.getTruckPanelIndex(this);
+
+                // Change the background color
+                panel.BackColor = dragColor;
+
+                // Bring to the front, on top of all other controls
+                panel.BringToFront();
+                panel.Invalidate();
+
+                // Show that the panel is being drug
+                isDragging = true;
             }
         }
 
@@ -350,53 +411,53 @@ namespace ProjectLincoln.Objects {
         private void PanelTruck_MouseMove (object sender, MouseEventArgs e) {
             // Ensure that the left mouse button is down when dragging
             if (e.Button == MouseButtons.Left) {
-                #region First execution
-                // Check to see if this is the first execution of this method
-                if (!isDragging) {
-                    // Show that the panel is being drug
-                    isDragging = true;
-
-                    // Get this panel's list index
-                    dragStartIndex = dragLastIndex = frmMain.getTruckPanelIndex(this);
-
-                    // Change the background color
-                    panel.BackColor = dragColor;
-
-                    // Bring to the front, on top of all other controls
-                    panel.BringToFront();
-                    panel.Invalidate();
-                }
-                #endregion
-
                 // Calculate the new y position
-                int y = panel.Top + handleLocation.Y + e.Y - dragStartLocation.Y;
+                currentY = panel.Top + handleLocation.Y + e.Y;
+                dragCurrLocation = e.Location;
 
                 // Ensure that the panel stays inside the bounds
-                if (y >= 0 && y <= ((frmMain.truckPanels.Count * panelDimensions.Height) - panelDimensions.Height)) {
+                if (currentY >= 0 && currentY <= (frmMain.truckPanels.Count * panelDimensions.Height)) {
                     // Update the index
-                    int newIndex = setNewTruckPanelIndex(y);
+                    int newIndex = setNewTruckPanelIndex(e.Y);
+
+                    //frmMain.label1.Text = string.Format(
+                    //    "dragStartLocation {0}\ndragLastLocation {1}\ndragCurrLocation {2}\npanel.Top {3}\nhandle.Y {4}\ne.Y {5}\ndragStart.Y {6}\nalg {7}\nmod {8}\nindex {9}\nnewIndex {10}\nbool1 {11}\nbool2 {12}\nbool {13}",
+                    //    dragStartLocation,
+                    //    dragLastLocation,
+                    //    dragCurrLocation,
+                    //    panel.Top,
+                    //    handleLocation.Y,
+                    //    e.Y,
+                    //    dragStartLocation.Y,
+                    //    panel.Top + handleLocation.Y + e.Y,
+                    //    (panel.Top + handleLocation.Y + e.Y) % 50,
+                    //    (panel.Top + handleLocation.Y + e.Y) / 50,
+                    //    newIndex,
+                    //    ((panel.Top + handleLocation.Y + e.Y) / panelDimensions.Height) < newIndex,
+                    //    ((panel.Top + handleLocation.Y + e.Y) % panelDimensions.Height) < (panelDimensions.Height - handleLocation.Y),
+                    //    ((panel.Top + handleLocation.Y + e.Y) / panelDimensions.Height) < newIndex && ((panel.Top + handleLocation.Y + e.Y) % panelDimensions.Height) < (panelDimensions.Height - handleLocation.Y)
+                    //    );
 
                     if (previewMove) {
-                        // Set the new (or same) y location
-                        //panel.Top = y;
+                        // Set the new (or same) location
+                        panel.Left = panel.Left + handleLocation.X + e.X;
+                        panel.Top = currentY;
                     } else {
                         // Set the new (or same) y location
-                        //panel.Top = panelDimensions.Height * newIndex;
+                        panel.Top = panelDimensions.Height * newIndex;
                     }
 
                     // Move the other panels if the index has just changed
                     if (newIndex != dragLastIndex) {
-                        frmMain.label1.Text = string.Format("old {0} new {1}", dragLastIndex, newIndex);
-
                         // Rearange the panels
-                        //frmMain.moveTruckPanel(dragLastIndex, newIndex);
+                        frmMain.moveTruckPanel(dragLastIndex, newIndex);
 
                         // Update the index
-                        //dragLastIndex = newIndex;
+                        dragLastIndex = newIndex;
                     }
 
                     // Set the last top to the new top
-                    dragLastTop = y;
+                    dragLastLocation = e.Location;
                 }
             }
         }
@@ -412,7 +473,11 @@ namespace ProjectLincoln.Objects {
                 // Set the bool to false to signify that it is no longer being drug
                 isDragging = false;
 
-                // Reorganize the indices of the truck panel list
+                // Put the label in the right position if in preview mode
+                if (previewMove) {
+                    panel.Left = 0;
+                    panel.Top = panelDimensions.Height * dragLastIndex;
+                }
 
                 // Reset the panel's background color
                 panel.BackColor = SystemColors.Control;
@@ -420,27 +485,32 @@ namespace ProjectLincoln.Objects {
         }
 
         /// <summary>
-        /// Sets the new index of the dragged panel
+        /// Gets the new index of the dragged panel
         /// </summary>
         /// <param name="y">The new y location of the panel</param>
         /// <returns>The new (or same) index</returns>
         private int setNewTruckPanelIndex (int y) {
-            int newIndex;
+            // Prepare the output
+            int newIndex = dragLastIndex;
 
-            // Shortcuts
+            // Shortcut for the panelDimensions.Height
             int h = panelDimensions.Height;
-            float h2 = (h / 2) + handleLocation.Y;
 
-            // Check which way the panel is being drug
-            if (y < dragLastTop) {
-                // Move the panel up one if newly above halfway mark
-                newIndex = (((dragLastTop % h) >= h2) && ((y % h) < h2)) ? --dragLastIndex : dragLastIndex;
+            // Get the delta direction the mouse moved
+            int dir = dragCurrLocation.Y - dragLastLocation.Y;
+
+            // Get the mouse position relative to the panel's holder
+            y = panel.Top + handleLocation.Y + y;
+
+            // Get the index of the panel that the mouse is currently over
+            int yIndex = y / h;
+
+            // Detect which direction the mouse is moving
+            if (dir <= 0) {
+                newIndex = (yIndex < newIndex && (y % h) < (h - handleLocation.Y)) ? --newIndex : newIndex;
             } else {
-                // Move the panel down one if newly below halfway mark
-                newIndex = (((dragLastTop % h) <= h2) && ((y % h) > h2)) ? ++dragLastIndex : dragLastIndex;
+                newIndex = (yIndex > newIndex && (y % h) > handleLocation.Y) ? ++newIndex : newIndex;
             }
-
-            frmMain.label1.Text = string.Format("y {0} la {1} d {2}", y, dragLastTop, (y < dragLastTop));
 
             return newIndex;
         }

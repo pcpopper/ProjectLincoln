@@ -18,6 +18,7 @@ namespace ProjectLincoln.Entity {
         public bool IsTrailer { get; private set; } // The property for the field
         public bool IsWeapon { get; private set; } // The property for the field
         public bool IsAttachment { get; private set; } // The property for the field
+        public string ImageName { get; private set; } // The property for the field
         #endregion
 
         /// <summary>
@@ -32,7 +33,9 @@ namespace ProjectLincoln.Entity {
         /// <param name="isTrailer">Is this a trailer?</param>
         /// <param name="isWeapon">Is this a weapon?</param>
         /// <param name="isAttachment">Is this a attachment?</param>
-        public Tamcn (int? tamcnId, string tamcnCode, string nomen, string shortDesc, int? pax, bool isTruck, bool isTrailer, bool isWeapon, bool isAttachment) {
+        /// <param name="imageName">The image name for the icon</param>
+        public Tamcn (int? tamcnId, string tamcnCode, string nomen, string shortDesc, int? pax, bool isTruck,
+            bool isTrailer, bool isWeapon, bool isAttachment, string imageName) {
             this.TamcnId = tamcnId;
             this.TamcnCode = tamcnCode;
             this.Nomen = nomen;
@@ -42,6 +45,7 @@ namespace ProjectLincoln.Entity {
             this.IsTrailer = isTrailer;
             this.IsWeapon = isWeapon;
             this.IsAttachment = isAttachment;
+            this.ImageName = imageName;
         }
 
         /// <summary>
@@ -66,7 +70,8 @@ namespace ProjectLincoln.Entity {
                 reader.GetBoolean("IsTruck"),
                 reader.GetBoolean("IsTrailer"),
                 reader.GetBoolean("IsWeapon"),
-                reader.GetBoolean("IsAttachment"));
+                reader.GetBoolean("IsAttachment"),
+                reader.GetString("ImageName"));
         }
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace ProjectLincoln.Entity {
         /// <returns>The formatted string</returns>
         public override string ToString () {
             return string.Format(
-                "Tamcn{{TamcnId:{0}, Tamcn:{1}, Nomen:{2}, Short:{3}, PAX:{4}, IsTruck:{5}, IsTrailer:{6}, IsWeapon:{7}, IsAttachment:{8}}}",
+                "Tamcn{{TamcnId:{0}, Tamcn:{1}, Nomen:{2}, Short:{3}, PAX:{4}, IsTruck:{5}, IsTrailer:{6}, IsWeapon:{7}, IsAttachment:{8}, ImageName:{9}}}",
                 TamcnId,
                 TamcnCode,
                 Nomen,
@@ -84,7 +89,8 @@ namespace ProjectLincoln.Entity {
                 IsTruck,
                 IsTrailer,
                 IsWeapon,
-                IsAttachment);
+                IsAttachment,
+                ImageName);
         }
 
         /// <summary>
@@ -106,6 +112,7 @@ namespace ProjectLincoln.Entity {
             fields.Add("IsTrailer", IsTrailer);
             fields.Add("IsWeapon", IsWeapon);
             fields.Add("IsAttachment", IsAttachment);
+            fields.Add("ImageName", ImageName);
 
             // return the insert statement
             return Insert.create("Tamcn", dbType, fields);
